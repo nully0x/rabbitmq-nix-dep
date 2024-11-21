@@ -11,7 +11,7 @@
       let
         pkgs = nixpkgs.legacyPackages.${system};
         rabbitmqPort = 5672;
-        rabbitmqHost = "localhost";
+        rabbitmqHost = "0.0.0.0";
         rabbitmqUser = "guest";
         rabbitmqPassword = "guest";
         rabbitmqBaseDir = "/tmp/rabbitmq-${builtins.getEnv "USER"}";
@@ -31,6 +31,11 @@
 
             mkdir -p $RABBITMQ_MNESIA_BASE $RABBITMQ_LOG_BASE
             touch $RABBITMQ_CONFIG_FILE $RABBITMQ_ENABLED_PLUGINS_FILE
+
+            cat << EOF > $RABBITMQ_CONFIG_FILE
+            listeners.tcp.default = ${rabbitmqHost}:${toString rabbitmqPort}
+            loopback_users = none
+            EOF
 
             echo "RabbitMQ development environment"
             echo "Run 'rabbitmq-server' to start RabbitMQ"

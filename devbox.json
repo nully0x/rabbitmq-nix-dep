@@ -1,0 +1,35 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.13.6/.schema/devbox.schema.json",
+  "packages": ["rabbitmq-server"],
+  "env": {
+    "RABBITMQ_MNESIA_BASE": "/tmp/rabbitmq-$USER/mnesia",
+    "RABBITMQ_LOG_BASE": "/tmp/rabbitmq-$USER/log",
+    "RABBITMQ_CONFIG_FILE": "/tmp/rabbitmq-$USER/rabbitmq.conf",
+    "RABBITMQ_ENABLED_PLUGINS_FILE": "/tmp/rabbitmq-$USER/enabled_plugins"
+  },
+  "shell": {
+    "init_hook": [
+      "mkdir -p $RABBITMQ_MNESIA_BASE $RABBITMQ_LOG_BASE",
+      "touch $RABBITMQ_CONFIG_FILE $RABBITMQ_ENABLED_PLUGINS_FILE",
+      "echo 'listeners.tcp.default = 0.0.0.0:5672' > $RABBITMQ_CONFIG_FILE",
+      "echo 'loopback_users = none' >> $RABBITMQ_CONFIG_FILE",
+      "echo 'RabbitMQ development environment'",
+      "echo 'Run \"rabbitmq-server\" to start RabbitMQ'",
+      "echo ''",
+      "echo 'RabbitMQ Connection String:'",
+      "echo 'amqp://guest:guest@0.0.0.0:5672'",
+      "echo ''",
+      "echo 'RabbitMQ data directory: /tmp/rabbitmq-'$USER",
+      "echo ''",
+      "echo 'Available commands:'",
+      "echo '  rabbitmq-server    - Start the RabbitMQ server'",
+      "echo '  rabbitmqctl        - RabbitMQ management tool'",
+      "echo '  rabbitmq-plugins   - RabbitMQ plugin management tool'"
+    ],
+    "scripts": {
+      "start": ["rabbitmq-server"],
+      "ctl": ["rabbitmqctl"],
+      "plugins": ["rabbitmq-plugins"]
+    }
+  }
+}
